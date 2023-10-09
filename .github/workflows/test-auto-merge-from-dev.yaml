@@ -23,8 +23,6 @@ jobs:
           npm version patch
           version=$(node -p "require('./package.json').version")
           git push --set-upstream origin "${branch}"
-          git rev-parse HEAD
-          commitHash=$?
           echo "branch=$branch" >> $GITHUB_OUTPUT
 
       - name: Create Pull Request to main in github and merge
