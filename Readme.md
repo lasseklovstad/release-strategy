@@ -1,17 +1,8 @@
 ## Setup
 
-### 1. Generate deploy key: `ssh-keygen`
+### 1. Allow github actions to approve pull requests and have read and write permissions
 
-The deploy key is used to create and push new branches to the repository.
-Then we can use is here.
+Go to Settings / Actions / General and select the option:
 
-```
- - uses: actions/checkout@v4
-   with:
-     ref: development
-     ssh-key: ${{ secrets.ADMIN_DEPLOY_KEY }}
-```
-
-### 2. Allow github actions to approve pull requests
-
-Go to Settings / Actions / General and select the option.
+- Allow github actions to approve pull requests
+- Read and write permissions

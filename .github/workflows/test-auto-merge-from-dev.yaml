@@ -32,7 +32,7 @@ jobs:
         with:
           script: |
             const script = require('./.github/scripts/createPullRequestAutoApproveAndMerge.js')
-            return await script({github, context, head: '${{ steps.minorBumpCreateBranch.outputs.branch }}', base: 'main', autoMerge: false, title: 'Automatic patch version'})
+            return await script({github, context, head: '${{ steps.minorBumpCreateBranch.outputs.branch }}', base: 'development', title: 'Automatic patch version'})
 
       - name: Create Pull Request, Auto-approve & Merge
         id: pr
@@ -40,4 +40,4 @@ jobs:
         with:
           script: |
             const script = require('./.github/scripts/createPullRequestAutoApproveAndMerge.js')
-            return await script({github, context, head: 'development', base: 'test', autoMerge: false, title: 'Automatic merge development into test'})
+            return await script({github, context, head: 'development', base: 'test', title: 'Automatic merge development into test'})
