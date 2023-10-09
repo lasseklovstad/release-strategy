@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch2 }}
+          fetch-depth: 3
 
       - name: Check if test branch2 contains last commit from branch1
         run: |
