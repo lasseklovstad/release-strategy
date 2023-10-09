@@ -1,7 +1,7 @@
-module.exports = async ({github, context, head, base, autoMerge = true}) => {
+module.exports = async ({github, context, head, base, autoMerge = true, title = 'Automated Pull Request'}) => {
     const { repo, owner } = context.repo;
     const result = await github.rest.pulls.create({
-      title: 'Automated Pull Request',
+      title,
       owner,
       repo,
       head,
