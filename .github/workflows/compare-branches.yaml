@@ -19,10 +19,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.branch2 }}
+          fetch-depth: 3
 
       - name: Check if test branch2 contains last commit from branch1
         run: |
-          git fetch
+          git fetch origin ${{ inputs.branch1 }}
           last_commit=$(git log --format="%H" -n 1 origin/${{ inputs.branch1 }})
           branchesContainingLastCommit=$(git branch --format='%(refname:short)' -a --contains $last_commit) 
           git log --format="%H" -n 3 origin/${{ inputs.branch2 }}
