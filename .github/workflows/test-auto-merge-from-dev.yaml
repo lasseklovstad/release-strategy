@@ -17,10 +17,11 @@ jobs:
         run: |
           git config --global user.email "github.actions@github.com"
           git config --global user.name "Github actions"
-          npm version patch
+
           branch="version-patch-${GITHUB_RUN_ID}"
-          version=$(node -p "require('./package.json').version")
           git switch --create "${branch}"
+          npm version patch
+          version=$(node -p "require('./package.json').version")
           git add .
           git commit -m "New patch version: $version"
           git push --set-upstream origin "${branch}"
