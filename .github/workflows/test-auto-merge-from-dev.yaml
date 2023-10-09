@@ -4,9 +4,16 @@ on:
   workflow_dispatch:
 
 jobs:
+  check:
+    name: "Running e2e tests"
+    uses: ./.github/workflows/compare-branches.yaml
+    with:
+      branch1: "development"
+      branch2: "test"
   pr_merge:
     name: Create Pull Request & Merge if necessary
     runs-on: ubuntu-latest
+    needs: check
     outputs:
       mergeOutput: ${{ steps.pr.outputs.mergeResult }}
     steps:
