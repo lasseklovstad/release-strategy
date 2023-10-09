@@ -22,6 +22,8 @@ jobs:
         run: |
           last_commit=$(git log --format="%H" -n 1 origin/${{ inputs.branch1 }})
           echo $last_commit
+          git branch -a --contains $last_commit
+          git branch -a --contains $last_commit | grep "remotes/origin/${{ inputs.branch2 }}$"
           if git branch -a --contains $last_commit | grep -q "remotes/origin/${{ inputs.branch2 }}$"; then
             echo "Test branch contains the last commit from development branch."
             exit 1 # Exit with an error code
