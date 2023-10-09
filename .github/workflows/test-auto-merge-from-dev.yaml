@@ -5,7 +5,6 @@ on:
 
 jobs:
   check:
-    name: "Running e2e tests"
     uses: ./.github/workflows/compare-branches.yaml
     with:
       branch1: "development"
