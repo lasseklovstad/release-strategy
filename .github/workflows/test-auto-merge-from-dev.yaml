@@ -33,7 +33,7 @@ jobs:
         with:
           script: |
             const script = require('./.github/scripts/createPullRequestAutoApproveAndMerge.js')
-            console.log('commitHash: ', ${{ steps.minorBumpCreateBranch.outputs.branch }})
+            console.log('commitHash: ', '${{ steps.minorBumpCreateBranch.outputs.branch }}')
             return await script({github, context, head: '${{ steps.minorBumpCreateBranch.outputs.branch }}', base: 'main', autoMerge: false})
 
       - name: Create Pull Request, Auto-approve & Merge
