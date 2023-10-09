@@ -30,7 +30,7 @@ jobs:
           git switch --create "${branch}"
           npm version minor
           version=$(node -p "require('./package.json').version")
-          git push --set-upstream origin "${branch}"
+          git push --tags --set-upstream origin "${branch}" 
           commitHash=$(git rev-parse HEAD)
           echo "branch=$branch" >> $GITHUB_OUTPUT 
           echo "commitHash=$commitHash" >> $GITHUB_OUTPUT
