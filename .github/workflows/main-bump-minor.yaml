@@ -31,8 +31,7 @@ jobs:
           npm version minor
           version=$(node -p "require('./package.json').version")
           git push --set-upstream origin "${branch}"
-          git rev-parse HEAD
-          commitHash=$?
+          commitHash=$(git rev-parse HEAD)
           echo "branch=$branch" >> $GITHUB_OUTPUT 
           echo "commitHash=$commitHash" >> $GITHUB_OUTPUT
 
@@ -42,7 +41,7 @@ jobs:
           script: |
             const script = require('./.github/scripts/createPullRequestAutoApproveAndMerge.js')
             console.log('commitHash: ', '${{ steps.minorBumpCreateBranch.outputs.commitHash }}')
-            return await script({github, context, head: '', base: 'main', autoMerge: false, title: 'Automatic bump minor version'})
+            return await script({github, context, head: '${{ steps.minorBumpCreateBranch.outputs.branch }}', base: 'main', autoMerge: false, title: 'Automatic bump minor version'})
 
       - uses: actions/checkout@v4
         with:
