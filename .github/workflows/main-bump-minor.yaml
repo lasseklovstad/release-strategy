@@ -13,29 +13,27 @@ jobs:
           ref: main
       - name: Create new branch and bump minor version
         id: minorBumpCreateBranch
-        working-directory: ./src/Udir.Surveys.Frontend
         run: |
           git config --global user.email "github.actions@github.com"
           git config --global user.name "Github actions"
-          npm version minor
-          branch="bump-request-to-main-${GITHUB_RUN_ID}"
-          version=$(node -p "require('./package.json').version")
+
+          branch="version-minor-${GITHUB_RUN_ID}"
           git switch --create "${branch}"
-          git add .
-          git commit -m "New minor version: $version"
+          npm version minor
+          version=$(node -p "require('./package.json').version")
           git push --set-upstream origin "${branch}"
           git rev-parse HEAD
           commitHash=$?
           echo "branch=$branch" >> $GITHUB_OUTPUT 
           echo "commitHash=$commitHash" >> $GITHUB_OUTPUT
 
-      - name: Create Pull Request to main in github and merge
+      - name: Create Pull Request for bumping minor version into main
         uses: actions/github-script@v6
         with:
           script: |
             const script = require('./.github/scripts/createPullRequestAutoApproveAndMerge.js')
             console.log('commitHash: ', ${{ steps.minorBumpCreateBranch.outputs.commitHash }})
-            return await script({github, context, head: ${{ steps.minorBumpCreateBranch.outputs.branch }}, base: 'main', autoMerge: false})
+            return await script({github, context, head: ${{ steps.minorBumpCreateBranch.outputs.branch }}, base: 'main', autoMerge: false, title: 'Automatic bump minor version'})
 
       - uses: actions/checkout@v4
         with:
@@ -45,15 +43,15 @@ jobs:
         run: |
           git config --global user.email "github.actions@github.com"
           git config --global user.name "Github actions"
-          branch="bump-request-to-dev-${GITHUB_RUN_ID}"
+          branch="version-minor-cherry-${GITHUB_RUN_ID}"
           git switch --create "${branch}"
           git cherry-pick ${{ steps.minorBumpCreateBranch.outputs.commitHash }}
           git push --set-upstream origin "${branch}"
           echo "branch=$branch" >> $GITHUB_OUTPUT
 
-      - name: Create Pull Request to dev in github and merge
+      - name: Create Pull Request for cherry pick minor version into development
         uses: actions/github-script@v6
         with:
           script: |
             const script = require('./.github/scripts/createPullRequestAutoApproveAndMerge.js')
-            return await script({github, context, head: ${{ steps.cherryPickCreateBranch.outputs.branch }}, base: 'development', autoMerge: false})
+            return await script({github, context, head: ${{ steps.cherryPickCreateBranch.outputs.branch }}, base: 'development', autoMerge: false, title: 'Automatic cherry pick minor version'})
