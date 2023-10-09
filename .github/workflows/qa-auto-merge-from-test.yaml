@@ -1,0 +1,18 @@
+name: QA - Automatic PR & Merge from Dev
+
+on:
+  workflow_dispatch:
+
+jobs:
+  pr_merge:
+    name: Create Pull Request & Merge if necessary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create Pull Request, Auto-approve & Merge
+        id: pr
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const script = require('./.github/scripts/createPullRequestAutoApproveAndMerge.js')
+            return await script({github, context, head: 'test', base: 'qa', title: 'Automatic merge test into qa'})
