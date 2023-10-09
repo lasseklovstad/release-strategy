@@ -22,9 +22,10 @@ jobs:
 
       - name: Check if test branch2 contains last commit from branch1
         run: |
-          git pull
+          git fetch
           last_commit=$(git log --format="%H" -n 1 origin/${{ inputs.branch1 }})
           branchesContainingLastCommit=$(git branch --format='%(refname:short)' -a --contains $last_commit) 
+          git log --format="%H" -n 3 origin/${{ inputs.branch2 }}
           echo $last_commit
           echo Start ----
           echo $branchesContainingLastCommit
