@@ -1,0 +1,45 @@
+name: Test - Automatic PR & Merge from Dev
+
+on:
+  workflow_dispatch:
+
+jobs:
+  pr_merge:
+    name: Create Pull Request & Merge if necessary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: development
+
+      - name: Create new branch and bump minor version
+        id: minorBumpCreateBranch
+        run: |
+          git config --global user.email "github.actions@github.com"
+          git config --global user.name "Github actions"
+          npm version patch
+          branch="version-patch-${GITHUB_RUN_ID}"
+          version=$(node -p "require('./package.json').version")
+          git switch --create "${branch}"
+          git add .
+          git commit -m "New patch version: $version"
+          git push --set-upstream origin "${branch}"
+          git rev-parse HEAD
+          commitHash=$?
+          echo "branch=$branch" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request to main in github and merge
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const script = require('./.github/scripts/createPullRequestAutoApproveAndMerge.js')
+            console.log('commitHash: ', ${{ steps.minorBumpCreateBranch.outputs.commitHash }})
+            return await script({github, context, head: ${{ steps.minorBumpCreateBranch.outputs.branch }}, base: 'main', autoMerge: false})
+
+      - name: Create Pull Request, Auto-approve & Merge
+        id: pr
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const script = require('./.github/scripts/createPullRequestAutoApproveAndMerge.js')
+            return await script({github, context, head: 'development', base: 'test', autoMerge: false})
