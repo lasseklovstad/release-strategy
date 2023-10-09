@@ -8,6 +8,7 @@ jobs:
     name: Create Pull Request & Merge if necessary
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Create Pull Request, Auto-approve & Merge
         id: pr
         uses: actions/github-script@v6
